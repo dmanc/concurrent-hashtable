@@ -12,6 +12,6 @@ void check(int expected, int actual, const char* message) {
 }
 
 int main() {
-   check(0xdeadbeef, 0xdeadbeef, "constant check");
-   printf("SUCCESS: Passed %d tests\n", testno);
+    check(0xdeadbeef, 0xdeadbeef, "constant check");
+    printf("SUCCESS: Passed %d tests\n", testno);
 }

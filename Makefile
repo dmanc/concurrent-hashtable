@@ -6,13 +6,13 @@ BASEHEADER=hashtable.h
 
 all: compile-test
 
-compile-test: $(BIN_DIR)/unit.bin
-$(BIN_DIR)/unit.bin: unit.cpp
+compile-test: $(BIN_DIR)/unit
+$(BIN_DIR)/unit: unit.cpp
 	mkdir -p $(BIN_DIR)
-	$(CC) unit.cpp -o $(BIN_DIR)/unit.bin
+	$(CC) unit.cpp -o $(BIN_DIR)/unit
 
-test: $(BIN_DIR)/unit.bin
-	$(BIN_DIR)/unit.bin
+test: $(BIN_DIR)/unit
+	$(BIN_DIR)/unit
 
 clean:
 	rm -rf bin

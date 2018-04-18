@@ -1,13 +1,18 @@
 CC=g++
 CCFLAGS=-O3
+BIN_DIR=bin
 
 BASEHEADER=hashtable.h
 
 all: compile-test
 
 compile-test:
-unit.bin: unit.cpp
-	$(CC) unit.cpp -o unit.bin
+$(BIN_DIR)/unit.bin: unit.cpp
+	mkdir -p $(BIN_DIR)
+	$(CC) unit.cpp -o $(BIN_DIR)/unit.bin
 
-test: unit.bin
-	./unit.bin
+test: $(BIN_DIR)/unit.bin
+	$(BIN_DIR)/unit.bin
+
+clean:
+

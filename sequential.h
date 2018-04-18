@@ -31,7 +31,7 @@ class Sequential: public HashTable {
         return 0;
     }
 
-    void put(uint32_t val) {
+    void put(uint32_t key, uint32_t val) {
         return;
     }
 

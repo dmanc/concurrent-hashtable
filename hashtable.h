@@ -3,15 +3,24 @@
 
 class HashTable {
  public:
+    // get key for value
     virtual uint32_t get(uint32_t) = 0;
-    virtual void put(int) = 0;
+
+    // put (key, value) pair
+    virtual void put(uint32_t, uint32_t) = 0;
+
+    // delete entry for key
     virtual uint32_t  del(uint32_t) = 0;
+
+    // check if has entry with key
     virtual bool hasKey(uint32_t) = 0;
 
+    // return number of entries
     uint32_t size() {
         return entries;
     }
 
+    // return is table is empty
     bool isEmpty() {
         return size() == 0;
     }

@@ -8,6 +8,7 @@ TARGET=hashtable
 all: compile-test hashtable
 
 $(TARGET): $(TARGET).cpp
+	mkdir -p $(BIN_DIR)
 	$(CC) $(CCFLAGS) -o $(BIN_DIR)/$(TARGET) $(TARGET).cpp
 
 compile-test: $(BIN_DIR)/unit

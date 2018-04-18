@@ -6,7 +6,7 @@ BASEHEADER=hashtable.h
 
 all: compile-test
 
-compile-test:
+compile-test: $(BIN_DIR)/unit.bin
 $(BIN_DIR)/unit.bin: unit.cpp
 	mkdir -p $(BIN_DIR)
 	$(CC) unit.cpp -o $(BIN_DIR)/unit.bin

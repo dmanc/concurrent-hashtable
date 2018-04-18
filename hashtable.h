@@ -3,6 +3,9 @@
 
 class HashTable {
  public:
+     HashTable(): entries(0) {
+     }
+
     // get key for value
     virtual uint32_t get(uint32_t) = 0;
 

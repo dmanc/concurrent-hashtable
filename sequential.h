@@ -2,19 +2,19 @@
 
 class Sequential: public HashTable {
  public:
-    int get(int key) {
+    uint32_t get(uint32_t key) {
         return 0;
     }
 
-    void put(int val) {
+    void put(uint32_t key, uint32_t val) {
         return;
     }
 
-    int del(int key) {
+    uint32_t del(uint32_t key) {
         return 0;
     }
 
-    bool hasKey(int key) {
+    bool hasKey(uint32_t key) {
         return 0;
     }
 

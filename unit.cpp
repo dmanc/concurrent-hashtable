@@ -1,5 +1,7 @@
 #include <iostream>
 #include "sequential.h"
+#include <stdio.h>
+#include <cstdlib>
 
 int testno = 0;
 

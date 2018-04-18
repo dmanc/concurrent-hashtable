@@ -13,7 +13,20 @@ void check(int expected, int actual, const char* message) {
     }
 }
 
+template <class tbl_type>
+void runTableTests() {
+    tbl_type tbl;
+
+    //Test starting size
+    check(tbl.size(), 0, "intial table size not 0");
+}
+
 int main() {
-    check(0xdeadbeef, 0xdeadbeef, "constant check");
+
+    // get hashtable choice to test specific table from cmd line
+    runTableTests<Sequential>(); 
+
+
+
     printf("SUCCESS: Passed %d tests\n", testno);
 }

@@ -1,5 +1,5 @@
 CC=g++
-CCFLAGS=-O3
+CCFLAGS=-O3 -std=c++14
 BIN_DIR=bin
 
 BASEHEADER=hashtable.h
@@ -15,4 +15,5 @@ test: $(BIN_DIR)/unit.bin
 	$(BIN_DIR)/unit.bin
 
 clean:
+	rm -rf bin
 

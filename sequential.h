@@ -1,3 +1,6 @@
+#ifndef SEQUENTIAL_H
+#define SEQUENTIAL_H
+
 #include "hashtable.h"
 
 class Node {
@@ -45,3 +48,5 @@ class Sequential: public HashTable {
 
 
 };
+
+#endif

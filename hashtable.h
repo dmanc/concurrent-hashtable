@@ -34,7 +34,7 @@ class HashTable {
 
 // Knuth's Multiplicative Method
 uint32_t hash(uint32_t v) {
-    return v * UINT32_C(2654435761);
+    return v * UINT32_C(2654435769);
 }
 
 #endif

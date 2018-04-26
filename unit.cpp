@@ -51,6 +51,16 @@ void runTableTests() {
     */
 
     //Multiple element operations
+    for(uint32_t i = 0; i < 100; i++) {
+        //printf("Putting %d, %d\n", i+1, i+5);
+        tbl.put(i + 1, i + 5);
+        check(tbl.size(), i + 2, "size after every operation");
+    }
+
+    for(uint32_t i = 0; i < 100; i+=5) {
+        check(tbl.get(i + 1), i + 5, "check multiple inserted keys");
+    }
+
 }
 
 void runSeqUnitTests() {

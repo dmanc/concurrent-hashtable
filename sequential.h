@@ -4,7 +4,8 @@
 #include "hashtable.h"
 
 #define START_NUM_BUCKETS 10
-#define RESIZE_FACTOR 10
+#define RESIZE_FACTOR 0.75
+
 class Node {
     public:
         uint32_t key, value;
@@ -69,6 +70,7 @@ class Sequential: public HashTable {
     private:
         uint32_t num_buckets;
         Bucket* buckets;
+        //protected field entries
 
         double balanceFactor() {
             return (double) entries / (double) num_buckets;
@@ -86,6 +88,7 @@ class Sequential: public HashTable {
             //Make new buckets with old size
             num_buckets *= 2;
             buckets = new Bucket[num_buckets];
+            entries = 0;
 
             //Insert all old elements into new table
             for(uint32_t i = 0; i < old_size; i++) {
@@ -97,7 +100,7 @@ class Sequential: public HashTable {
                 }
             }
             
-            delete old_buckets;
+            delete[] old_buckets;
         }
     public:
         Sequential() : num_buckets(START_NUM_BUCKETS) {
@@ -113,9 +116,11 @@ class Sequential: public HashTable {
             b->add(key, val);
 
             entries++;
-            if(balanceFactor() > RESIZE_FACTOR) {
+            if(balanceFactor() >= RESIZE_FACTOR) {
                 printf("I should resize\n");
+                resize();
             }
+
             return;
         }
 

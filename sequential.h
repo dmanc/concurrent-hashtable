@@ -7,8 +7,7 @@ class Node {
   public:
     uint32_t key, value;
     Node* next;
-    Node() {}
-    Node(uint32_t K, uint32_t V): key(K), value(V){}
+    Node(uint32_t K, uint32_t V): key(K), value(V), next(NULL){}
 };
 
 class Bucket {
@@ -24,11 +23,11 @@ class Bucket {
             head = next;
         }
     }
-    void add(int k, int v) {
+    void add(uint32_t k, uint32_t v) {
         if(head == NULL) {
             head = new Node(k, v);
         } else {
-            Node *node = new Node(k, v);
+            Node* node = new Node(k, v);
             node->next = head;
             head = node;
         }

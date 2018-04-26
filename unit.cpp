@@ -5,18 +5,21 @@
 
 int testno = 0;
 
-void check(int expected, int actual, const char* message) {
+void check(uint32_t expected, uint32_t actual, const char* message) {
     testno++;
     if(expected != actual) {
-        printf("FAILURE: Test %d with message: '%s'\n", testno, message);
+        printf("FAILURE: Test %d with message: '%s'\n", 
+                testno, message);
         exit(0);
     }
 }
 
+
 void check(bool expected, bool actual, const char* message) {
     testno++;
     if(expected != actual) {
-        printf("FAILURE: Test %d with message: '%s'\n", testno, message);
+        printf("FAILURE: Test %d with message: '%s'\n", 
+                testno, message);
         exit(0);
     }
 }
@@ -52,10 +55,8 @@ void runTableTests() {
 
 void runSeqUnitTests() {
     Bucket b;
-    int keys[2] = {1, 4};
-    //keys[0] = 1; keys[1] = 4;
-    int values[2] = {2, 3};
-    //values[0] = 2; values[1] = 3;
+    uint32_t keys[2] = {1, 4};
+    uint32_t values[2] = {2, 3};
     b.add(1, 2);
     b.add(4, 3);
     check(b.size, 2, "seq bucket size");
@@ -65,11 +66,10 @@ void runSeqUnitTests() {
     while (head != NULL) {
         check(head->key, keys[1 - i], "check key in seq bucket node");
         check(head->value, values[1 - i], "check value in seq bucket node");
-
         head = head->next;
         i++;
     }
-
+    
     check(head == NULL, true, "bucket linked list");
 }
 

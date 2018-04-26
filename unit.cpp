@@ -85,11 +85,11 @@ void runSeqUnitTests() {
 
 int main() {
 
+    printf("Running unit tests on Sequential table...\n");
     runSeqUnitTests();
 
-    // get hashtable choice to test specific table from cmd line
+    printf("Running table tests on Sequential table...\n");
     runTableTests<Sequential>(); 
-
 
     printf("SUCCESS: Passed %d tests\n", testno);
 }

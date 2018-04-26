@@ -7,8 +7,7 @@ class Node {
   public:
     uint32_t key, value;
     Node* next;
-    Node() {}
-    Node(uint32_t K, uint32_t V): key(K), value(V){}
+    Node(uint32_t K, uint32_t V): key(K), value(V), next(NULL){}
 };
 
 class Bucket {
@@ -16,11 +15,19 @@ class Bucket {
     uint32_t size;
     Node *head;
     Bucket(): size(0), head(NULL) {}
-    void add(int k, int v) {
+    ~Bucket() {
+        Node* head = this->head;
+        while(head != NULL) {
+            Node* next = head->next;
+            delete head;
+            head = next;
+        }
+    }
+    void add(uint32_t k, uint32_t v) {
         if(head == NULL) {
             head = new Node(k, v);
         } else {
-            Node *node = new Node(k, v);
+            Node* node = new Node(k, v);
             node->next = head;
             head = node;
         }
@@ -36,10 +43,6 @@ class Sequential: public HashTable {
 
     void put(uint32_t key, uint32_t val) {
         return;
-    }
-
-    uint32_t del(uint32_t key) {
-        return 0;
     }
 
     bool hasKey(uint32_t key) {

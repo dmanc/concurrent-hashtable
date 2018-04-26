@@ -1,5 +1,5 @@
 CC=g++
-CCFLAGS=-O3 -pthread -Wall -std=c++14
+CCFLAGS=-O3 -pthread -Wall -std=c++14 -g
 BIN_DIR=bin
 
 BASEHEADER=hashtable.h
@@ -12,7 +12,7 @@ $(TARGET): $(TARGET).cpp
 	$(CC) $(CCFLAGS) -o $(BIN_DIR)/$(TARGET) $(TARGET).cpp
 
 compile-test: $(BIN_DIR)/unit
-$(BIN_DIR)/unit: unit.cpp
+$(BIN_DIR)/unit: unit.cpp sequential.h
 	mkdir -p $(BIN_DIR)
 	$(CC) $(CCFLAGS) unit.cpp -o $(BIN_DIR)/unit
 

@@ -63,7 +63,6 @@ void runSeqUnitTests() {
 
     int i = 0;
     while (head != NULL) {
-        printf("%d", i);
         check(head->key, keys[1 - i], "check key in seq bucket node");
         check(head->value, values[1 - i], "check value in seq bucket node");
 

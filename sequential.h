@@ -117,7 +117,6 @@ class Sequential: public HashTable {
 
             entries++;
             if(balanceFactor() >= RESIZE_FACTOR) {
-                printf("I should resize\n");
                 resize();
             }
 

@@ -79,8 +79,25 @@ class Sequential: public HashTable {
         }
 
         void resize() {
-            //Resize
-            //TODO
+            //Save old buckets
+            Bucket* old_buckets = buckets;
+            uint32_t old_size = num_buckets;
+
+            //Make new buckets with old size
+            num_buckets *= 2;
+            buckets = new Bucket[num_buckets];
+
+            //Insert all old elements into new table
+            for(uint32_t i = 0; i < old_size; i++) {
+                Bucket* b = &old_buckets[i];
+                Node* head = b->head;
+                while(head != NULL) {
+                    put(head->key, head->value);
+                    head = head->next;
+                }
+            }
+            
+            delete old_buckets;
         }
     public:
         Sequential() : num_buckets(START_NUM_BUCKETS) {

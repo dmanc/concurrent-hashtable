@@ -41,15 +41,42 @@ void runTableTests() {
     check(tbl.isEmpty(), false, "is empty with 1 key");
     
     //Delete single element
-    tbl.del(0xa);
+    /*tbl.del(0xa);
     check(tbl.size(), 0, "size after delete");
     check(tbl.isEmpty(), true, "isEmpty after deleting");
     check(tbl.hasKey(0xa), false, "check missing key");
+    */
 
     //Multiple element operations
 }
 
+void runSeqUnitTests() {
+    Bucket b;
+    int keys[2] = {1, 4};
+    //keys[0] = 1; keys[1] = 4;
+    int values[2] = {2, 3};
+    //values[0] = 2; values[1] = 3;
+    b.add(1, 2);
+    b.add(4, 3);
+    check(b.size, 2, "seq bucket size");
+    Node* head = b.head;
+
+    int i = 0;
+    while (head != NULL) {
+        printf("%d", i);
+        check(head->key, keys[1 - i], "check key in seq bucket node");
+        check(head->value, values[1 - i], "check value in seq bucket node");
+
+        head = head->next;
+        i++;
+    }
+
+    check(head == NULL, true, "bucket linked list");
+}
+
 int main() {
+
+    runSeqUnitTests();
 
     // get hashtable choice to test specific table from cmd line
     runTableTests<Sequential>(); 

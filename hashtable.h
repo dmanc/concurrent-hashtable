@@ -12,8 +12,10 @@ class HashTable {
     // put (key, value) pair
     virtual void put(uint32_t, uint32_t) = 0;
 
-    // delete entry for key
-    virtual uint32_t  del(uint32_t) = 0;
+    /*
+     * // delete entry for key
+     * virtual uint32_t  del(uint32_t) = 0;
+    */
 
     // check if has entry with key
     virtual bool hasKey(uint32_t) = 0;

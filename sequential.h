@@ -16,6 +16,14 @@ class Bucket {
     uint32_t size;
     Node *head;
     Bucket(): size(0), head(NULL) {}
+    ~Bucket() {
+        Node* head = this->head;
+        while(head != NULL) {
+            Node* next = head->next;
+            delete head;
+            head = next;
+        }
+    }
     void add(int k, int v) {
         if(head == NULL) {
             head = new Node(k, v);
@@ -36,10 +44,6 @@ class Sequential: public HashTable {
 
     void put(uint32_t key, uint32_t val) {
         return;
-    }
-
-    uint32_t del(uint32_t key) {
-        return 0;
     }
 
     bool hasKey(uint32_t key) {

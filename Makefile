@@ -5,7 +5,7 @@ BIN_DIR=bin
 BASEHEADER=hashtable.h
 TARGET=hashtable
 
-all: compile-test hashtable
+all: compile-test
 
 $(TARGET): $(TARGET).cpp
 	mkdir -p $(BIN_DIR)

@@ -79,8 +79,17 @@ void runSeqUnitTests() {
         head = head->next;
         i++;
     }
-    
     check(head == NULL, true, "bucket linked list");
+
+    Sequential tbl;
+    int val = 1000;
+    for(int i = 0; i<=val; i++) {
+        tbl.put(i, i);
+    }
+    int sum = 0;
+    for(int i = 0; i<=val; i++)
+        sum += tbl.get(i);
+    check(true, sum == val*(val+1)/2, "Insert and sum 1000 elements");
 }
 
 int main() {

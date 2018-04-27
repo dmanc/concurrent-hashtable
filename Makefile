@@ -16,8 +16,16 @@ $(BIN_DIR)/unit: unit.cpp sequential.h
 	mkdir -p $(BIN_DIR)
 	$(CC) $(CCFLAGS) unit.cpp -o $(BIN_DIR)/unit
 
+compile-time: $(BIN_DIR)/time
+$(BIN_DIR)/time: timing.cpp sequential.h
+	mkdir -p $(BIN_DIR)
+	$(CC) $(CCFLAGS) timing.cpp -o $(BIN_DIR)/time
+
 test: $(BIN_DIR)/unit
 	$(BIN_DIR)/unit
+
+time: $(BIN_DIR)/time
+	$(BIN_DIR)/time
 
 clean:
 	rm -rf bin

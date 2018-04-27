@@ -21,39 +21,35 @@ bool isWrite(double probability) {
 // Performs the reads/writes one a hashtable with a given R/W ratio
 // TODO: operation should eventually take in a list of elements to operate on.
 template <class tbl_type>
-void operation(tbl_type tbl, int amount, int pos, double probability, double* time) {
+void operation(tbl_type& tbl, int amount, int pos, double probability, double* time) {
     // Replace sleep with actual read/write operations
     //double time = 0.0;
-    cout << "hello\n";
     for(int i = pos; i<amount; i++) {
         uint32_t val = values[pos];
         bool write = isWrite(probability);
         auto begin = std::chrono::high_resolution_clock::now();
         if(write) {
-            //std::this_thread::sleep_for(std::chrono::milliseconds(100));
             tbl.put(val, 1);
-            cout << "inloop\n";
         }
         else {
-            //std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            // TODO: Change this to get a valid value
             tbl.get(val);
         }
         auto end = std::chrono::high_resolution_clock::now();
         time[0] += std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count();
     }
-    cout << "end loop\n";
 }
 
 template <class tbl_type>
-void startTime(tbl_type tbl, int amount, double probability, double* time, int trials, int workers) {
+void startTime(tbl_type& tbl, int amount, double probability, double* time, int trials, int workers) {
     bool sequential = std::is_same<tbl_type, Sequential>::value;
     time[0] = 0.0;
     for(int i = 0; i<trials; i++) {
-        if(sequential) operation(tbl, amount, 0, probability, time);
+        if(sequential) operation<tbl_type>(tbl, amount, 0, probability, time);
         else {
             for(int w = 0; w<workers; w++) {
                 // TODO: operation should take a slice of the data
-                threads[w] = std::thread(operation<tbl_type>, tbl, amount, 0, probability, time);
+                threads[w] = std::thread(operation<tbl_type>, std::ref(tbl), amount, 0, probability, time);
             }
         }
     }
@@ -86,9 +82,9 @@ void measureTime(int trials, int seed, int workers) {
     double* time = new double[1];
 
     // 100% Writes
-    startTime(tbl, amount, 1, time, trials, workers);
+    startTime<tbl_type>(tbl, amount, 1, time, trials, workers);
     cout << "(R/W 1.0) Average time per run in nanoseconds: " << time[0] / trials << " ns\n";
-    /*
+
     // 50% Writes
     startTime(tbl, amount, 0.5, time, trials, workers);
     cout << "(R/W 0.5) Average time per run in nanoseconds: " << time[0] / trials << " ns\n";
@@ -100,7 +96,7 @@ void measureTime(int trials, int seed, int workers) {
     // 0% Writes
     startTime(tbl, amount, 0.0, time, trials, workers);
     cout << "(R/W 0.0) Average time per run in nanoseconds: " << time[0] / trials << " ns\n";
-    */
+
 }
 
 int main(int argc, char** argv) {

@@ -1,8 +1,12 @@
 #include <iostream>
 #include "sequential.h"
 #include "coarse.h"
+#include <thread>
 #include <stdio.h>
 #include <cstdlib>
+#include <vector>
+
+using namespace std;
 
 int testno = 0;
 
@@ -64,9 +68,50 @@ void runTableTests() {
 
 }
 
+typedef vector<int>::iterator vec_iter;
+template <class tbl_type>
+void func(tbl_type& tbl, vector<int> vec, vec_iter begin, vec_iter end, int id, int workers) {
+    //if(id == workers-1)
+    //    end = vec.begin() + 1000;
+    //printf("begin and end %d %d\n", *begin, *end);
+    for(vec_iter cur = begin; cur != end; ++cur) {
+        //printf("cur %d\n", *cur);
+        tbl.put(*cur, *cur);
+    }
+}
+
 template <class tbl_type>
 void runConcTableTests() {
     //TODO
+    tbl_type tbl;
+    check(tbl.size(), 0, "intial table size not 0");
+    check(tbl.isEmpty(), true, "is empty initial");
+
+    int val = 10000;
+    int workers = 16;
+    int part = val / workers + 1;
+    vector<thread> threads(workers);
+    vector<int> values(val);
+
+    for(int i = 0; i<val; i++)
+        values[i] = i + 1;
+
+    for(int w = 0; w<workers; w++) {
+        int start = w*part;
+        int end = (w+1)*part;
+        if(end > val) end = val;
+        threads[w] = thread(func<tbl_type>, std::ref(tbl), values, values.begin() + start, values.begin() + end, w, workers);
+    }
+
+    for(int w = 0; w<workers; w++)
+        threads[w].join();
+    check(tbl.size(), val, "table size is not 1000");
+    check(tbl.isEmpty(), false, "table size is empty");
+
+    int sum = 0;
+    for(int i = 0; i<val; i++)
+        sum += tbl.get(i+1);
+    check(true, sum == val*(val+1)/2, "Insert and sum 10000 elements");
 }
 
 void runSeqUnitTests() {

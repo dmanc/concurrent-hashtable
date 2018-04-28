@@ -1,6 +1,7 @@
 #include <iostream>
 #include "sequential.h"
 #include "coarse.h"
+#include "fine.h"
 #include <stdio.h>
 #include <cstdlib>
 
@@ -101,6 +102,12 @@ int main() {
     runTableTests<Coarse>();
     printf("Running concurrent table tests on Coarse table...\n");
     runConcTableTests<Coarse>();
+
+
+    printf("Running table tests on Fine table...\n");
+    runTableTests<Fine>();
+    printf("Running concurrent table tests on Fine table...\n");
+    runConcTableTests<Fine>();
 
     printf("SUCCESS: Passed %d tests\n", testno);
 }

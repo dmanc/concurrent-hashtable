@@ -22,7 +22,6 @@ class Bucket {
             Node* head = this->head;
             while(head != NULL) {
                 Node* next = head->next;
-                delete head;
                 head = next;
             }
         }
@@ -99,8 +98,6 @@ class Sequential: public HashTable {
                     head = head->next;
                 }
             }
-            
-            delete[] old_buckets;
         }
     public:
         Sequential() : num_buckets(START_NUM_BUCKETS) {

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "sequential.h"
+#include "coarse.h"
 #include <stdio.h>
 #include <cstdlib>
 
@@ -63,6 +64,11 @@ void runTableTests() {
 
 }
 
+template <class tbl_type>
+void runConcTableTests() {
+    //TODO
+}
+
 void runSeqUnitTests() {
     Bucket b;
     uint32_t keys[2] = {1, 4};
@@ -98,7 +104,12 @@ int main() {
     runSeqUnitTests();
 
     printf("Running table tests on Sequential table...\n");
-    runTableTests<Sequential>(); 
+    runTableTests<Sequential>();
+
+    printf("Running table tests on Coarse table...\n");
+    runTableTests<Coarse>();
+    printf("Running concurrent table tests on Coarse table...\n");
+    runConcTableTests<Coarse>();
 
     printf("SUCCESS: Passed %d tests\n", testno);
 }

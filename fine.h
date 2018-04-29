@@ -1,6 +1,7 @@
 #ifndef FINE_H
 #define FINE_H
 
+#include <atomic>
 #include "hashtable.h"
 
 #define START_NUM_BUCKETS_FINE 16

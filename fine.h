@@ -71,6 +71,9 @@ class Fine : public HashTable {
         uint32_t num_buckets;
         Bucket_Fine* buckets;
         mutex* locks;
+        mutex resize_lock;
+        atomic<uint32_t> entries_at;
+
         //protected field entries
 
         double balanceFactor() {
@@ -101,7 +104,7 @@ class Fine : public HashTable {
                 Bucket_Fine* b = &old_buckets[i];
                 Node_Fine* head = b->head;
                 while(head != NULL) {
-                    put(head->key, head->value);
+                    put_free(head->key, head->value);
                     head = head->next;
                 }
             }
@@ -111,28 +114,59 @@ class Fine : public HashTable {
     public:
         Fine() : num_buckets(START_NUM_BUCKETS_FINE) {
             buckets = new Bucket_Fine[START_NUM_BUCKETS_FINE];
-            locks= new mutex[START_NUM_BUCKETS_FINE];
+            locks = new mutex[START_NUM_BUCKETS_FINE];
+            entries_at = 0;
         }
         uint32_t get(uint32_t key) {
+            mutex* bucket_lock = getLockForKey(key);
+            lock_guard<mutex> lock_g(*bucket_lock);
             Bucket_Fine* b = getBucketForKey(key);
             return b->get(key);
         }
 
         void put(uint32_t key, uint32_t val) {
             //TODO
+            mutex* bucket_lock = getLockForKey(key);
+            bucket_lock->lock();
             Bucket_Fine* b = getBucketForKey(key);
             b->add(key, val);
+            bucket_lock->unlock();
 
-            entries++;
-            if(balanceFactor() >= RESIZE_FACTOR_FINE) {
-                resize();
+            entries_at++;
+
+
+            //Only one thread should resize
+            if(resize_lock.try_lock()) {
+                if(balanceFactor() >= RESIZE_FACTOR_FINE) {
+                    //Acquire all locks
+                    for(int i = 0; i < START_NUM_BUCKETS_FINE; i++) {
+                        locks[i].lock();
+                    }
+                    resize();
+                    //Free all locks
+                    for(int i = 0; i < START_NUM_BUCKETS_FINE; i++) {
+                        locks[i].unlock();
+                    }
+                }
             }
 
             return;
         }
 
-        bool hasKey(uint32_t key) {
+        //Puts without a lock, helper for resizing
+        void put_free(uint32_t key, uint32_t val) {
             //TODO
+            Bucket_Fine* b = getBucketForKey(key);
+            b->add(key, val);
+            entries_at++;
+            return;
+        }
+
+
+        bool hasKey(uint32_t key) {
+
+            mutex* bucket_lock = getLockForKey(key);
+            lock_guard<mutex> lock_g(*bucket_lock);
             Bucket_Fine* b = getBucketForKey(key);
 
             //return false if bucket empty
@@ -141,6 +175,14 @@ class Fine : public HashTable {
             }
 
             return b->hasKey(key);
+        }
+
+        uint32_t size() {
+            return entries_at;
+        }
+
+        bool isEmpty() {
+            return Fine::size() == 0;
         }
 
 

@@ -1,5 +1,5 @@
 CC=g++
-CCFLAGS=-O3 -pthread -Wall -std=c++14 -g
+CCFLAGS=-O3 -pthread -Wall -std=c++14 -g -fgnu-tm
 BIN_DIR=bin
 
 BASEHEADER=hashtable.h

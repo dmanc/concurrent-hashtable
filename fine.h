@@ -78,7 +78,7 @@ class Fine : public HashTable {
         //protected field entries
 
         double balanceFactor() {
-            return (double) entries / (double) num_buckets;
+            return (double) entries_at / (double) num_buckets;
         }
 
         Bucket_Fine* getBucketForKey(uint32_t key) {
@@ -98,7 +98,7 @@ class Fine : public HashTable {
             //Make new buckets with old size
             num_buckets *= 2;
             buckets = new Bucket_Fine[num_buckets];
-            entries = 0;
+            entries_at = 0;
 
             //Insert all old elements into new table
             for(uint32_t i = 0; i < old_size; i++) {
@@ -149,6 +149,7 @@ class Fine : public HashTable {
                         locks[i].unlock();
                     }
                 }
+                resize_lock.unlock();
             }
 
             return;

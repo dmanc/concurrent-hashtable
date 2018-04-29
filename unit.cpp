@@ -97,7 +97,7 @@ void runConcTableTests() {
 
     for(int i = 0; i<val; i++)
         values[i] = i + 1;
-
+ 
     for(int w = 0; w<workers; w++) {
         int start = w*part;
         int end = (w+1)*part;
@@ -158,12 +158,12 @@ int main() {
     printf("Running concurrent table tests on Coarse table...\n");
     runConcTableTests<Coarse>();
 
-    /*
+    
     printf("Running table tests on Fine table...\n");
     runTableTests<Fine>();
     printf("Running concurrent table tests on Fine table...\n");
     runConcTableTests<Fine>();
-    */
+    
     
     printf("Running table tests on STM table...\n");
     runTableTests<STM>();

@@ -23,7 +23,7 @@ class Bucket_Fine {
             Node_Fine* head = this->head;
             while(head != NULL) {
                 Node_Fine* next = head->next;
-                delete head;
+                //delete head;
                 head = next;
             }
         }
@@ -110,7 +110,7 @@ class Fine : public HashTable {
                 }
             }
             
-            delete[] old_buckets;
+            //delete[] old_buckets;
         }
     public:
         Fine() : num_buckets(START_NUM_BUCKETS_FINE) {

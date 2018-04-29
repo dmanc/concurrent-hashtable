@@ -131,9 +131,10 @@ class Fine : public HashTable {
             bucket_lock->lock();
             Bucket_Fine* b = getBucketForKey(key);
             b->add(key, val);
+            entries_at++;
             bucket_lock->unlock();
 
-            entries_at++;
+
 
 
             //Only one thread should resize

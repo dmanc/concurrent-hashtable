@@ -63,22 +63,23 @@ void startTime(tbl_type& tbl, int amount, double probability, double* time, int 
     }
 
     auto end = chrono::high_resolution_clock::now();
-    time[0] += chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count();
+    time[0] += chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
 
-
-    time[0] /= amount;
+    // time[0] /= amount;
 }
 
 // Runs the test multiple times and takes the average.
 template <class tbl_type>
 void measureTime(int trials, int seed, int workers) {
-    int amount = values.size();
     srand(seed);
+    int amount = values.size();
     bool sequential = is_same<tbl_type, Sequential>::value;
+    string name = typeid(tbl_type).name();
+    
     assert(workers >= 1 && workers <= 16);
     if(sequential) cout << "Sequential timing\n";
     else {
-        cout << "Parallel timing\n";
+	cout << name << " timing\n";
         threads.clear();
         threads.resize(workers);
     }
@@ -89,20 +90,19 @@ void measureTime(int trials, int seed, int workers) {
 
     // 100% Writes
     startTime<tbl_type>(tbl, amount, 1, time, trials, workers);
-    cout << "(R/W 1.0) Average time per run in nanoseconds: " << time[0] / trials << " ns\n";
+    cout << "(R/W 1.0) Average time per run: " << time[0] / trials << "\n";
 
     // 50% Writes
     startTime<tbl_type>(tbl, amount, 0.5, time, trials, workers);
-    cout << "(R/W 0.5) Average time per run in nanoseconds: " << time[0] / trials << " ns\n";
+    cout << "(R/W 0.5) Average time per run: " << time[0] / trials << "\n";
 
     // 25% Writes
     startTime<tbl_type>(tbl, amount, 0.25, time, trials, workers);
-    cout << "(R/W 0.25) Average time per run in nanoseconds: " << time[0] / trials << " ns\n";
+    cout << "(R/W 0.25) Average time per run: " << time[0] / trials << "\n";
 
     // 0% Writes
     startTime<tbl_type>(tbl, amount, 0.0, time, trials, workers);
-    cout << "(R/W 0.0) Average time per run in nanoseconds: " << time[0] / trials << " ns\n";
-
+    cout << "(R/W 0.0) Average time per run: " << time[0] / trials << "\n";
 }
 
 int main(int argc, char** argv) {

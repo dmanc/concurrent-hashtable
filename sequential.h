@@ -70,6 +70,7 @@ class Sequential: public HashTable {
     private:
         uint32_t num_buckets;
         Bucket* buckets;
+        bool toresize;
         //protected field entries
 
         double balanceFactor() {
@@ -101,7 +102,7 @@ class Sequential: public HashTable {
             }
         }
     public:
-        Sequential() : num_buckets(START_NUM_BUCKETS) {
+        Sequential(bool toresize=true) : num_buckets(START_NUM_BUCKETS) {
             buckets = new Bucket[START_NUM_BUCKETS];
         }
         uint32_t get(uint32_t key) {
@@ -114,11 +115,11 @@ class Sequential: public HashTable {
             b->add(key, val);
 
             entries++;
-            /*
+
             if(balanceFactor() >= RESIZE_FACTOR) {
                 resize();
             }
-            */
+
 
             return;
         }

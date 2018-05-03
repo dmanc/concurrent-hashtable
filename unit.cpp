@@ -95,7 +95,7 @@ void runConcTableTests() {
 template <class tbl_type>
 void runConcTableTests(bool resize) {
     printf("Resize ON: %s\n", resize ? "yes" : "false");
-    
+
     tbl_type tbl(resize);
     check(tbl.size(), 0, "intial table size not 0");
     check(tbl.isEmpty(), true, "is empty initial");

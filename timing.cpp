@@ -66,19 +66,19 @@ void startTime(tbl_type& tbl, int amount, double probability, double* time, int 
     }
 
     auto end = chrono::high_resolution_clock::now();
+    //time[0] += chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
     time[0] += chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
 
 }
 
 // Runs the test multiple times and takes the average.
 template <class tbl_type>
-void measureTime(int trials, int workers) {
-
+void measureTime(int trials, int workers, bool resize) {
     int amount = values.size();
-    
+
     bool sequential = is_same<tbl_type, Sequential>::value;
     string name = typeid(tbl_type).name();
-    
+
     assert(workers >= 1 && workers <= 16);
     if(sequential) cout << "Sequential timing\n";
     else {
@@ -88,7 +88,9 @@ void measureTime(int trials, int workers) {
     }
 
     cout << "Amount of trials: " << trials << "\n";
-    tbl_type tbl1;
+    tbl_type tbl1(resize);
+    for(int i = 0; i<amount; i++)
+        tbl1.put(values[i], 1);
     double* time = new double[1];
 
     // 100% Writes
@@ -96,27 +98,34 @@ void measureTime(int trials, int workers) {
     cout << "(R/W 1.0) Average time per run: " << time[0] / trials << "\n";
 
     // 50% Writes
-    tbl_type tbl2;
+    tbl_type tbl2(resize);
+    for(int i = 0; i<amount; i++)
+        tbl2.put(values[i], 1);
     startTime<tbl_type>(tbl2, amount, 0.5, time, trials, workers);
     cout << "(R/W 0.5) Average time per run: " << time[0] / trials << "\n";
 
-    /*
+    
     // 25% Writes
-    tbl_type tbl3;
+    tbl_type tbl3(resize);
+    for(int i = 0; i<amount; i++)
+        tbl3.put(values[i], 1);
     startTime<tbl_type>(tbl3, amount, 0.25, time, trials, workers);
     cout << "(R/W 0.25) Average time per run: " << time[0] / trials << "\n";
 
     // 0% Writes
-    tbl_type tbl4;
+    tbl_type tbl4(resize);
+    for(int i = 0; i<amount; i++)
+        tbl4.put(values[i], 1);
     startTime<tbl_type>(tbl4, amount, 0.0, time, trials, workers);
     cout << "(R/W 0.0) Average time per run: " << time[0] / trials << "\n";
-    */
+    
 }
 
 int main(int argc, char** argv) {
     std::cout << "Hello World\n";
     int workers = 1;
     int amount = 1;
+    int resize = 1;
     // Handle arguments
     int c;
     while(1) {
@@ -124,10 +133,11 @@ int main(int argc, char** argv) {
             {
                 {"workers", required_argument, 0, 'w'},
                 {"amount", required_argument, 0, 'a'},
+                {"resize", required_argument, 0, 'r'},
                 {0,0,0,0}
             };
         int optind = 0;
-        c  = getopt_long(argc, argv, "w:", long_options, &optind);
+        c  = getopt_long(argc, argv, "w:a:r:", long_options, &optind);
         if(c == -1) break;
         switch(c) {
             case 'w':
@@ -135,6 +145,9 @@ int main(int argc, char** argv) {
                 break;
             case 'a':
                 amount = std::stoi(optarg);
+                break;
+           case 'r':
+                resize = std::stoi(optarg);
                 break;
         }
     }
@@ -148,11 +161,22 @@ int main(int argc, char** argv) {
         uint32_t val = (rand() % 10000) + 1;
         values.push_back(val);
     }
-
-    measureTime<Sequential>(1, workers);
-    measureTime<Coarse>(1, workers);
-    measureTime<STM>(1, workers);
-    measureTime<Fine>(1, workers);
-    measureTime<FineSpin>(1, workers);
+    
+    if(!resize) {
+        cout << "Scalability without resizing\n";
+        measureTime<Sequential>(1, workers, false);
+        measureTime<Coarse>(1, workers, false);
+        measureTime<STM>(1, workers, false);
+        measureTime<Fine>(1, workers, false);
+        measureTime<FineSpin>(1, workers, false);
+    }
+    else {
+        cout << "Scalability with resizing\n";
+        measureTime<Sequential>(1, workers, true);
+        measureTime<Coarse>(1, workers, true);
+        measureTime<STM>(1, workers, true);
+        measureTime<Fine>(1, workers, true);
+        measureTime<FineSpin>(1, workers, true);
+    }
     return 0;
 }

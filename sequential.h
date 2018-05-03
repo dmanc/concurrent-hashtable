@@ -116,7 +116,7 @@ class Sequential: public HashTable {
 
             entries++;
 
-            if(balanceFactor() >= RESIZE_FACTOR) {
+            if(toresize && balanceFactor() >= RESIZE_FACTOR) {
                 resize();
             }
 

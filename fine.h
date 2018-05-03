@@ -134,25 +134,21 @@ class Fine : public HashTable {
             entries_at++;
             bucket_lock->unlock();
 
-
-
-
+            /*
             //Only one thread should resize
-            if(resize_lock.try_lock()) {
-                if(balanceFactor() >= RESIZE_FACTOR_FINE) {
-                    //Acquire all locks
-                    for(int i = 0; i < START_NUM_BUCKETS_FINE; i++) {
-                        locks[i].lock();
-                    }
-                    resize();
-                    //Free all locks
-                    for(int i = 0; i < START_NUM_BUCKETS_FINE; i++) {
-                        locks[i].unlock();
-                    }
+            if(balanceFactor() >= RESIZE_FACTOR_FINE && resize_lock.try_lock()) {
+                //Acquire all locks
+                for(int i = 0; i < START_NUM_BUCKETS_FINE; i++) {
+                    locks[i].lock();
+                }
+                resize();
+                //Free all locks
+                for(int i = 0; i < START_NUM_BUCKETS_FINE; i++) {
+                    locks[i].unlock();
                 }
                 resize_lock.unlock();
             }
-
+            */
             return;
         }
 

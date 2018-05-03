@@ -3,6 +3,7 @@
 #include "coarse.h"
 #include <cstdlib>
 #include "fine.h"
+#include "fine-spin.h"
 #include <getopt.h>
 #include <iostream>
 #include <map>
@@ -13,6 +14,7 @@
 #include <vector>
 
 using namespace std;
+
 vector<thread> threads;
 vector<uint32_t> values;
 
@@ -44,6 +46,7 @@ void startTime(tbl_type& tbl, int amount, double probability, double* time, int 
     bool sequential = is_same<tbl_type, Sequential>::value;
     int part = amount / workers + 1;
     time[0] = 0.0;
+    srand(0x100);
     auto begin = chrono::high_resolution_clock::now();
     for(int i = 0; i<trials; i++) {
         if(sequential) operation<tbl_type>(tbl, values.begin(), values.end(), probability, time);
@@ -65,14 +68,14 @@ void startTime(tbl_type& tbl, int amount, double probability, double* time, int 
     auto end = chrono::high_resolution_clock::now();
     time[0] += chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
 
-    // time[0] /= amount;
 }
 
 // Runs the test multiple times and takes the average.
 template <class tbl_type>
-void measureTime(int trials, int seed, int workers) {
-    srand(seed);
+void measureTime(int trials, int workers) {
+
     int amount = values.size();
+    
     bool sequential = is_same<tbl_type, Sequential>::value;
     string name = typeid(tbl_type).name();
     
@@ -85,24 +88,29 @@ void measureTime(int trials, int seed, int workers) {
     }
 
     cout << "Amount of trials: " << trials << "\n";
-    tbl_type tbl;
+    tbl_type tbl1;
     double* time = new double[1];
 
     // 100% Writes
-    startTime<tbl_type>(tbl, amount, 1, time, trials, workers);
+    startTime<tbl_type>(tbl1, amount, 1, time, trials, workers);
     cout << "(R/W 1.0) Average time per run: " << time[0] / trials << "\n";
 
     // 50% Writes
-    startTime<tbl_type>(tbl, amount, 0.5, time, trials, workers);
+    tbl_type tbl2;
+    startTime<tbl_type>(tbl2, amount, 0.5, time, trials, workers);
     cout << "(R/W 0.5) Average time per run: " << time[0] / trials << "\n";
 
+    /*
     // 25% Writes
-    startTime<tbl_type>(tbl, amount, 0.25, time, trials, workers);
+    tbl_type tbl3;
+    startTime<tbl_type>(tbl3, amount, 0.25, time, trials, workers);
     cout << "(R/W 0.25) Average time per run: " << time[0] / trials << "\n";
 
     // 0% Writes
-    startTime<tbl_type>(tbl, amount, 0.0, time, trials, workers);
+    tbl_type tbl4;
+    startTime<tbl_type>(tbl4, amount, 0.0, time, trials, workers);
     cout << "(R/W 0.0) Average time per run: " << time[0] / trials << "\n";
+    */
 }
 
 int main(int argc, char** argv) {
@@ -135,14 +143,16 @@ int main(int argc, char** argv) {
     cout << "Amount: " << amount << "\n";
 
     // Generate data
+    srand(0x0);
     for(int i = 0; i<amount; i++) {
-        int val = (rand() % 1000) + 1;
+        uint32_t val = (rand() % 10000) + 1;
         values.push_back(val);
     }
 
-    measureTime<Sequential>(5, 0x100, workers);
-    measureTime<Coarse>(5, 0x100, workers);
-    measureTime<STM>(5, 0x100, workers);
-    measureTime<Fine>(5, 0x100, workers);
+    measureTime<Sequential>(1, workers);
+    measureTime<Coarse>(1, workers);
+    //measureTime<STM>(5, 0x100, workers);
+    measureTime<Fine>(1, workers);
+    measureTime<FineSpin>(1, workers);
     return 0;
 }

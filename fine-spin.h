@@ -89,11 +89,11 @@ class FineSpin : public HashTable {
             bucket_lock->unlock();
 
             entries_at++;
-
-
+            
+            /*
             //Only one thread should resize
-            if(resize_lock.try_lock()) {
-                if(balanceFactor() >= RESIZE_FACTOR_FINE) {
+            if(balanceFactor() >= RESIZE_FACTOR_FINE && resize_lock.try_lock()) {
+                
                     //Acquire all locks
                     for(int i = 0; i < START_NUM_BUCKETS_FINE; i++) {
                         locks[i].lock();
@@ -103,9 +103,11 @@ class FineSpin : public HashTable {
                     for(int i = 0; i < START_NUM_BUCKETS_FINE; i++) {
                         locks[i].unlock();
                     }
-                }
+                
                 resize_lock.unlock();
             }
+            */
+            
 
             return;
         }

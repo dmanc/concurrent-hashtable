@@ -2,8 +2,9 @@
 #define SEQUENTIAL_H
 
 #include "hashtable.h"
+#include <cstdio>
 
-#define START_NUM_BUCKETS 10
+#define START_NUM_BUCKETS 16
 #define RESIZE_FACTOR 0.75
 
 class Node {
@@ -113,9 +114,11 @@ class Sequential: public HashTable {
             b->add(key, val);
 
             entries++;
+            /*
             if(balanceFactor() >= RESIZE_FACTOR) {
                 resize();
             }
+            */
 
             return;
         }

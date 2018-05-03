@@ -42,9 +42,6 @@ class STM: public HashTable {
         }
 
         bool isEmpty() {
-            //__transaction_atomic {
-            //  return seq.size() == 0;
-            //}
             return seq.size() == 0;
         }
 };

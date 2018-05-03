@@ -151,7 +151,7 @@ int main(int argc, char** argv) {
 
     measureTime<Sequential>(1, workers);
     measureTime<Coarse>(1, workers);
-    //measureTime<STM>(5, 0x100, workers);
+    measureTime<STM>(1, workers);
     measureTime<Fine>(1, workers);
     measureTime<FineSpin>(1, workers);
     return 0;

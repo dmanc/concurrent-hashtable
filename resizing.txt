@@ -1,0 +1,34 @@
+Hello World
+Workers: 8
+Amount: 1000000
+Scalability with resizing
+Sequential timing
+Amount of trials: 1
+(R/W 1.0) Average time per run: 265
+(R/W 0.5) Average time per run: 104
+(R/W 0.25) Average time per run: 95
+(R/W 0.0) Average time per run: 86
+6Coarse timing
+Amount of trials: 1
+(R/W 1.0) Average time per run: 590
+(R/W 0.5) Average time per run: 393
+(R/W 0.25) Average time per run: 402
+(R/W 0.0) Average time per run: 390
+3STM timing
+Amount of trials: 1
+(R/W 1.0) Average time per run: 3298
+(R/W 0.5) Average time per run: 558
+(R/W 0.25) Average time per run: 263
+(R/W 0.0) Average time per run: 189
+4Fine timing
+Amount of trials: 1
+(R/W 1.0) Average time per run: 378
+(R/W 0.5) Average time per run: 178
+(R/W 0.25) Average time per run: 175
+(R/W 0.0) Average time per run: 173
+8FineSpin timing
+Amount of trials: 1
+(R/W 1.0) Average time per run: 1960
+(R/W 0.5) Average time per run: 714
+(R/W 0.25) Average time per run: 251
+(R/W 0.0) Average time per run: 171

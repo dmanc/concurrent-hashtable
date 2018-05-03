@@ -7,7 +7,7 @@
 #include <iostream>
 #include <map>
 #include "sequential.h"
-//#include "stm.h"
+#include "stm.h"
 #include <thread>
 #include <type_traits>
 #include <vector>

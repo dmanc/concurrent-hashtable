@@ -3,6 +3,7 @@
 #include "coarse.h"
 #include "fine.h"
 #include "fine-spin.h"
+#include "stm.h"
 #include <thread>
 #include <stdio.h>
 #include <cstdlib>
@@ -169,10 +170,10 @@ int main() {
     printf("Running concurrent table tests on Fine-Spin table...\n");
     runConcTableTests<Fine>();
     
-    /*printf("Running table tests on STM table...\n");
+    printf("Running table tests on STM table...\n");
     runTableTests<STM>();
     printf("Running concurrent table tests on STM table...\n");
-    runConcTableTests<STM>();*/
+    runConcTableTests<STM>();
 
     printf("SUCCESS: Passed %d tests\n", testno);
 }

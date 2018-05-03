@@ -2,6 +2,7 @@
 #include "sequential.h"
 #include "coarse.h"
 #include "fine.h"
+#include "fine-spin.h"
 #include <thread>
 #include <stdio.h>
 #include <cstdlib>
@@ -163,6 +164,10 @@ int main() {
     printf("Running concurrent table tests on Fine table...\n");
     runConcTableTests<Fine>();
     
+    printf("Running table tests on Fine-Spin table...\n");
+    runTableTests<Fine>();
+    printf("Running concurrent table tests on Fine-Spin table...\n");
+    runConcTableTests<Fine>();
     
     /*printf("Running table tests on STM table...\n");
     runTableTests<STM>();

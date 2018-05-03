@@ -84,9 +84,19 @@ void func(tbl_type& tbl, vector<int> vec, vec_iter begin, vec_iter end, int id, 
 }
 
 template <class tbl_type>
+void runConcTableTests(bool);
+
+template <class tbl_type>
 void runConcTableTests() {
-    //TODO
-    tbl_type tbl;
+    runConcTableTests<tbl_type>(true);
+    runConcTableTests<tbl_type>(false);
+}
+
+template <class tbl_type>
+void runConcTableTests(bool resize) {
+    printf("Resize ON: %s\n", resize ? "yes" : "false");
+    
+    tbl_type tbl(resize);
     check(tbl.size(), 0, "intial table size not 0");
     check(tbl.isEmpty(), true, "is empty initial");
 

@@ -120,7 +120,6 @@ class Sequential: public HashTable {
                 resize();
             }
 
-
             return;
         }
 

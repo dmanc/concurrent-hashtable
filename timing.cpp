@@ -27,9 +27,9 @@ bool isWrite(double probability) {
 // Performs the reads/writes one a hashtable with a given R/W ratio
 typedef std::vector<uint32_t>::iterator vec_iter;
 template <class tbl_type>
-void operation(tbl_type& tbl, vec_iter begin, vec_iter end, double probability, double* time) {
-    for(vec_iter cur = begin; cur != end; ++cur) {
-        uint32_t val = *cur;
+void operation(tbl_type& tbl, uint32_t start, uint32_t end, double probability, double* time) {
+    for(uint32_t i = start; i <= end; i++) {
+        uint32_t val = values[i];
         bool write = isWrite(probability);
         if(write) {
             tbl.put(val, 1);
@@ -49,14 +49,14 @@ void startTime(tbl_type& tbl, int amount, double probability, double* time, int 
     srand(0x100);
     auto begin = chrono::high_resolution_clock::now();
     for(int i = 0; i<trials; i++) {
-        if(sequential) operation<tbl_type>(tbl, values.begin(), values.end(), probability, time);
+        if(sequential) operation<tbl_type>(tbl, 0, values.size() - 1, probability, time);
         else {
             for(int w = 0; w<workers; w++) {
                 // TODO: operation should take a slice of the data
                 int start = w*part;
                 int end = (w+1)*part;
-                if(end > amount) end = amount;
-                threads[w] = thread(operation<tbl_type>, ref(tbl), values.begin() + start, values.begin() + end, probability, time);
+                if(end >= amount) end = amount - 1;
+                threads[w] = thread(operation<tbl_type>, ref(tbl), start, end, probability, time);
             }
             if(!sequential) {
                 for(int w = 0; w<workers; w++)

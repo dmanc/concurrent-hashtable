@@ -11,7 +11,7 @@ class Coarse: public HashTable {
         Sequential seq;
         mutex lock;
     public:
-        Coarse() {}
+        Coarse(bool toresize = true) : seq(toresize) {}
         
         uint32_t get(uint32_t key) {
             lock_guard<mutex> lock_g(lock);

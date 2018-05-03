@@ -74,6 +74,7 @@ class Fine : public HashTable {
         mutex* locks;
         mutex resize_lock;
         atomic<uint32_t> entries_at;
+        bool toresize;
 
         //protected field entries
 
@@ -113,10 +114,11 @@ class Fine : public HashTable {
             //delete[] old_buckets;
         }
     public:
-        Fine() : num_buckets(START_NUM_BUCKETS_FINE) {
+        Fine(bool toresize = true) : num_buckets(START_NUM_BUCKETS_FINE) {
             buckets = new Bucket_Fine[START_NUM_BUCKETS_FINE];
             locks = new mutex[START_NUM_BUCKETS_FINE];
             entries_at = 0;
+            this->toresize = toresize;
         }
         uint32_t get(uint32_t key) {
             mutex* bucket_lock = getLockForKey(key);
@@ -126,7 +128,6 @@ class Fine : public HashTable {
         }
 
         void put(uint32_t key, uint32_t val) {
-            //TODO
             mutex* bucket_lock = getLockForKey(key);
             bucket_lock->lock();
             Bucket_Fine* b = getBucketForKey(key);
@@ -134,27 +135,27 @@ class Fine : public HashTable {
             entries_at++;
             bucket_lock->unlock();
 
-            /*
-            //Only one thread should resize
-            if(balanceFactor() >= RESIZE_FACTOR_FINE && resize_lock.try_lock()) {
-                //Acquire all locks
-                for(int i = 0; i < START_NUM_BUCKETS_FINE; i++) {
-                    locks[i].lock();
+
+            if(toresize) {
+                //Only one thread should resize
+                if(balanceFactor() >= RESIZE_FACTOR_FINE && resize_lock.try_lock()) {
+                    //Acquire all locks
+                    for(int i = 0; i < START_NUM_BUCKETS_FINE; i++) {
+                        locks[i].lock();
+                    }
+                    resize();
+                    //Free all locks
+                    for(int i = 0; i < START_NUM_BUCKETS_FINE; i++) {
+                        locks[i].unlock();
+                    }
+                    resize_lock.unlock();
                 }
-                resize();
-                //Free all locks
-                for(int i = 0; i < START_NUM_BUCKETS_FINE; i++) {
-                    locks[i].unlock();
-                }
-                resize_lock.unlock();
             }
-            */
             return;
         }
 
         //Puts without a lock, helper for resizing
         void put_free(uint32_t key, uint32_t val) {
-            //TODO
             Bucket_Fine* b = getBucketForKey(key);
             b->add(key, val);
             entries_at++;

@@ -9,7 +9,7 @@ class STM: public HashTable {
     private:
         Sequential seq;
     public:
-        STM() {}
+        STM(bool toresize = true) : seq(toresize) {}
 
         uint32_t get(uint32_t key) {
             uint32_t val;

@@ -29,6 +29,7 @@ class FineSpin : public HashTable {
         spin* locks;
         mutex resize_lock;
         atomic<uint32_t> entries_at;
+        bool toresize;
 
         //protected field entries
 
@@ -68,10 +69,11 @@ class FineSpin : public HashTable {
             //delete[] old_buckets;
         }
     public:
-        FineSpin() : num_buckets(START_NUM_BUCKETS_FINE) {
+        FineSpin(bool toresize = true) : num_buckets(START_NUM_BUCKETS_FINE) {
             buckets = new Bucket_Fine[START_NUM_BUCKETS_FINE];
             locks = new spin[START_NUM_BUCKETS_FINE];
             entries_at = 0;
+            this->toresize = toresize;
         }
         uint32_t get(uint32_t key) {
             spin* bucket_lock = getLockForKey(key);
@@ -81,7 +83,6 @@ class FineSpin : public HashTable {
         }
 
         void put(uint32_t key, uint32_t val) {
-            //TODO
             spin* bucket_lock = getLockForKey(key);
             bucket_lock->lock();
             Bucket_Fine* b = getBucketForKey(key);
@@ -89,24 +90,24 @@ class FineSpin : public HashTable {
             bucket_lock->unlock();
 
             entries_at++;
-            
-            /*
-            //Only one thread should resize
-            if(balanceFactor() >= RESIZE_FACTOR_FINE && resize_lock.try_lock()) {
-                
-                    //Acquire all locks
-                    for(int i = 0; i < START_NUM_BUCKETS_FINE; i++) {
-                        locks[i].lock();
-                    }
-                    resize();
-                    //Free all locks
-                    for(int i = 0; i < START_NUM_BUCKETS_FINE; i++) {
-                        locks[i].unlock();
-                    }
-                
-                resize_lock.unlock();
+
+            if(toresize) {
+                //Only one thread should resize
+                if(balanceFactor() >= RESIZE_FACTOR_FINE && resize_lock.try_lock()) {
+                    
+                        //Acquire all locks
+                        for(int i = 0; i < START_NUM_BUCKETS_FINE; i++) {
+                            locks[i].lock();
+                        }
+                        resize();
+                        //Free all locks
+                        for(int i = 0; i < START_NUM_BUCKETS_FINE; i++) {
+                            locks[i].unlock();
+                        }
+                    
+                    resize_lock.unlock();
+                }
             }
-            */
             
 
             return;

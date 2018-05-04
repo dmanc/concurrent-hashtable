@@ -71,6 +71,7 @@ void startTime(tbl_type& tbl, int amount, double probability, double* time, int 
 
 }
 
+
 // Runs the test multiple times and takes the average.
 template <class tbl_type>
 void measureTime(int trials, int workers, bool resize) {
@@ -89,7 +90,7 @@ void measureTime(int trials, int workers, bool resize) {
 
     cout << "Amount of trials: " << trials << "\n";
     tbl_type tbl1(resize);
-    for(int i = 0; i<amount; i++)
+    for(int i = 0; i < amount; i++)
         tbl1.put(values[i], 1);
     double* time = new double[1];
 
@@ -158,7 +159,7 @@ int main(int argc, char** argv) {
     // Generate data
     srand(0x0);
     for(int i = 0; i<amount; i++) {
-        uint32_t val = (rand() % 10000) + 1;
+        uint32_t val = (((uint32_t) rand()) % 10000) + 1;
         values.push_back(val);
     }
     

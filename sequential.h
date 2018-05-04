@@ -104,6 +104,7 @@ class Sequential: public HashTable {
     public:
         Sequential(bool toresize=true) : num_buckets(START_NUM_BUCKETS) {
             buckets = new Bucket[START_NUM_BUCKETS];
+            this->toresize = toresize;
         }
         uint32_t get(uint32_t key) {
             Bucket* b = getBucketForKey(key);
